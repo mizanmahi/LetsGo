@@ -33,12 +33,15 @@ func main() {
 	var userTickets int // some other int types are int8, int16, int32, int64, uint8, uint16, uint32, uint64, uintptr, byte, rune, float32, float64, complex64, complex128
 
 	fmt.Printf("Please enter your name: ")
+	fmt.Scan(&userName) // this is a function that reads the input from the user and stores it in the variable. & is used to pass the address of the variable. which is called a pointer.
 
-	// here we can't assign the different types other than string like 15, true, false, etc.
-	userName = "Rock"
-	// here we need to assign the number type value.
-	userTickets = 2
+	fmt.Printf("Please the amount of ticket: ")
+	fmt.Scan(&userTickets)
 
-	print(userName)
-	print(userTickets)
+	fmt.Printf("Hello %v, you have just purchased %v ticket\n", userName, userTickets)
+
+	availableTickets = availableTickets - userTickets
+
+	fmt.Printf("Only %v tickets are available out of %v \n", availableTickets, conferenceTickets)
+
 }
