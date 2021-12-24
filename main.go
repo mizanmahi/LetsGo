@@ -19,6 +19,7 @@ func main() {
 
 	//var bookings  = [50]string{"Jack", "John"} // array of strings
 	var bookings [50]string // this the alternate syntax for creating an array of strings
+	//var bookings []string // this is called a slice that's length is dynamic and can grow and shrink as needed.
 
 	//@ we can also use the short hand notation for creating variables, the short hand notation is the := operator.
 
