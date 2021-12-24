@@ -17,10 +17,13 @@ func main() {
 
 	var availableTickets = 50
 
+	//var bookings  = [50]string{"Jack", "John"} // array of strings
+	var bookings [50]string // this the alternate syntax for creating an array of strings
+
 	//@ we can also use the short hand notation for creating variables, the short hand notation is the := operator.
 
 	// we can print the type of a variable by using the %T placeholder
-	fmt.Printf("The type of the conferenceName is %T\n", conferenceName)
+	//fmt.Printf("The type of the conferenceName is %T\n", conferenceName)
 
 	// fmt.Println =>  this is called printline function.
 	// fmt.Printf => is used when we want to print a formatted string, it is a formatted print function.
@@ -37,8 +40,9 @@ func main() {
 
 	fmt.Printf("Please the amount of ticket: ")
 	fmt.Scan(&userTickets)
+	bookings[0] = userName
 
-	fmt.Printf("Hello %v, you have just purchased %v ticket\n", userName, userTickets)
+	fmt.Printf("Hello %v, you have just purchased %v ticket\n", bookings[0], userTickets)
 
 	availableTickets = availableTickets - userTickets
 
