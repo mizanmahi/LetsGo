@@ -10,10 +10,11 @@ import (
 func main() {
 
 	// creating variables
-	var conferenceName = "Go Seminar" // Go infer the type of the variable based on the value assigned to it, and will throw error if later want to assign a different type to the variable. it could also be written like this with type declaration var conferenceName string = "Go Seminar"
+	var conferenceName = "Go Seminar" // Go infer the type of the variable based on the value assigned to it, and will throw error if later want to assign a different type to the variable. it could also be written like this with type declaration 
+	// var conferenceName string = "Go Seminar"
 
 	// const is used when we want to create a variable that will never change, it is a constant variable.
-	const conferenceTickets = 50
+	const conferenceTickets int = 50
 
 	var availableTickets = 50
 
