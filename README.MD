@@ -1,99 +1,301 @@
-**Golang Function Parameter Passing Cheatsheet**, covering **value passing** and **pointer-based mutation** with pros and cons.
+### **Golang `struct` vs JavaScript Object**
+
+In JavaScript, objects are dynamic, while in Go, `structs` are **statically typed and more optimized** for performance. Let’s break it down.
 
 ---
 
-# **Golang Function Parameter Passing Cheatsheet**
+## **1️⃣ What is a `struct` in Golang?**
 
-## **1. Passing Values to Functions (Call by Value)**
+-  A `struct` is a **collection of fields** grouped together under a type.
+-  It is similar to a **class** or **object** in JavaScript.
+-  `structs` provide **static typing**, better **performance**, and **memory efficiency**.
 
--  In Go, function arguments are passed **by value** by default.
--  A **copy** of the value is created and passed to the function.
-
-### **Example: Passing by Value**
+### **Example in Go:**
 
 ```go
 package main
 
 import "fmt"
 
-func outputAge(age int) {
-    age = 40  // This change is local to the function
-    fmt.Println("Inside function:", age)
+// Define a struct
+type User struct {
+    Name  string
+    Age   int
+    Email string
 }
 
 func main() {
-    age := 32
-    outputAge(age)
-    fmt.Println("Outside function:", age) // Remains 32
+    // Create an instance
+    user := User{Name: "John Doe", Age: 30, Email: "john@example.com"}
+    fmt.Println(user.Name) // Accessing struct field
 }
 ```
 
-### **Memory Allocation**
+---
 
--  **Original variable (`age`)** is stored at a memory address.
--  When passed to `outputAge`, a **new copy** is created at a different memory address.
--  Changes inside the function do **not** affect the original variable.
+## **2️⃣ JavaScript Object Equivalent**
 
-### **Pros of Pass by Value**
+-  In JS, objects are **dynamic key-value stores** that can hold different types of values.
+-  JavaScript objects are more flexible but less optimized in terms of memory.
 
-✅ Safer since original data is not modified.  
-✅ Avoids unintended side effects.  
-✅ Suitable for small values (e.g., int, float, bool).
+### **Example in JavaScript:**
 
-### **Cons of Pass by Value**
+```js
+const user = {
+   name: 'John Doe',
+   age: 30,
+   email: 'john@example.com',
+};
 
-❌ Creates additional memory allocation.  
-❌ Inefficient for large data structures (e.g., structs, slices, maps).
+console.log(user.name); // Accessing object property
+```
 
 ---
 
-## **2. Modifying Values Using Pointers (Call by Reference)**
+## **3️⃣ Key Differences: Golang `struct` vs JavaScript Object**
 
--  Instead of passing a copy, we pass a **memory address (pointer)** so the function modifies the original value.
+| Feature          | Golang `struct`                         | JavaScript Object                          |
+| ---------------- | --------------------------------------- | ------------------------------------------ |
+| **Typing**       | Statically typed                        | Dynamically typed                          |
+| **Memory Usage** | Efficient, as it is compiled            | Higher, due to dynamic nature              |
+| **Definition**   | Predefined fields                       | Can have arbitrary properties              |
+| **Modification** | Fields cannot be added dynamically      | Properties can be added/removed at runtime |
+| **Methods**      | Uses `struct` methods                   | Functions can be attached dynamically      |
+| **Inheritance**  | No direct inheritance (use composition) | Prototypal inheritance                     |
+| **Performance**  | Faster, as fields are fixed             | Slower, as properties are dynamic          |
 
-### **Example: Passing by Pointer**
+---
+
+## **4️⃣ Mutability & Adding Fields**
+
+### **🔹 JavaScript: Dynamic Property Addition**
+
+```js
+const user = { name: 'Alice', age: 25 };
+user.email = 'alice@example.com'; // ✅ Allowed
+
+console.log(user);
+```
+
+-  In JavaScript, new properties can be added to objects at any time.
+
+### **🔹 Golang: Fixed Fields (No Dynamic Fields)**
+
+```go
+type User struct {
+    Name  string
+    Age   int
+}
+
+func main() {
+    user := User{Name: "Alice", Age: 25}
+    // user.Email = "alice@example.com" // ❌ Error: Field doesn't exist
+}
+```
+
+-  In Go, you **cannot** add new fields dynamically. The struct definition must be known at compile-time.
+
+---
+
+## **5️⃣ Adding Methods**
+
+### **🔹 JavaScript Object Method**
+
+```js
+const user = {
+   name: 'Alice',
+   greet: function () {
+      console.log(`Hello, I am ${this.name}`);
+   },
+};
+
+user.greet(); // Output: Hello, I am Alice
+```
+
+-  JS objects can have functions attached dynamically.
+
+### **🔹 Go Struct Method**
 
 ```go
 package main
 
 import "fmt"
 
-func outputAge(age *int) {
-    *age = 40  // Directly modifies original variable
-    fmt.Println("Inside function:", *age)
+type User struct {
+    Name string
+}
+
+// Method for struct
+func (u User) Greet() {
+    fmt.Println("Hello, I am", u.Name)
 }
 
 func main() {
-    age := 32
-    outputAge(&age)  // Passing memory address
-    fmt.Println("Outside function:", age) // Now modified to 40
+    user := User{Name: "Alice"}
+    user.Greet() // Output: Hello, I am Alice
 }
 ```
 
-### **Memory Allocation**
-
--  `&age` passes the **memory address** of `age` instead of a copy.
--  `*age = 40` modifies the **actual** value at that memory address.
-
-### **Pros of Using Pointers**
-
-✅ Efficient for large data structures (avoids copying).  
-✅ Allows modifying the original variable directly.  
-✅ Useful when working with mutable data like slices, maps, and structs.
-
-### **Cons of Using Pointers**
-
-❌ Can lead to **unintended side effects** if not managed properly.  
-❌ More complex, requires understanding of memory management.  
-❌ Risk of **nil pointer dereference** if not handled properly.
+-  In Go, struct methods must be **declared explicitly**.
 
 ---
 
-## **3. Choosing Between Value & Pointer Passing**
+## **6️⃣ Pointers & Struct Methods**
 
-| Scenario                             | Use Value Passing       | Use Pointer Passing            |
-| ------------------------------------ | ----------------------- | ------------------------------ |
-| Primitive types (int, float)         | ✅ Yes                  | ❌ No (unless mutation needed) |
-| Large structs or arrays              | ❌ No (memory overhead) | ✅ Yes (efficient)             |
-| Need to modify the original variable | ❌ No                   | ✅ Yes                         |
-| Safer, avoids side effects           | ✅ Yes                  | ❌ No                          |
+### **🔹 JavaScript: Objects are Reference Types**
+
+```js
+let obj1 = { name: 'Alice' };
+let obj2 = obj1;
+
+obj2.name = 'Bob'; // Changes obj1 as well
+console.log(obj1.name); // Output: Bob
+```
+
+-  JavaScript objects are **reference types**, so changes affect the original object.
+
+### **🔹 Golang: Value vs Pointer Receiver**
+
+```go
+type User struct {
+    Name string
+}
+
+// Method with value receiver (copy)
+func (u User) ChangeName(newName string) {
+    u.Name = newName // Only modifies copy
+}
+
+// Method with pointer receiver (modifies original)
+func (u *User) ChangeNamePointer(newName string) {
+    u.Name = newName // Modifies original
+}
+
+func main() {
+    user := User{Name: "Alice"}
+
+    user.ChangeName("Bob")
+    fmt.Println(user.Name) // Output: Alice (not modified)
+
+    user.ChangeNamePointer("Bob")
+    fmt.Println(user.Name) // Output: Bob (modified)
+}
+```
+
+-  **Value receivers** don’t modify the original struct.
+-  **Pointer receivers** modify the actual struct.
+
+---
+
+## **7️⃣ Embedding (Inheritance Alternative in Go)**
+
+### **🔹 JavaScript: Prototypal Inheritance**
+
+```js
+const person = {
+   greet() {
+      console.log('Hello!');
+   },
+};
+
+const user = Object.create(person);
+user.name = 'Alice';
+user.greet(); // Output: Hello!
+```
+
+-  JavaScript uses **prototypal inheritance**.
+
+### **🔹 Golang: Struct Embedding (Composition)**
+
+```go
+type Person struct {
+    Name string
+}
+
+type Employee struct {
+    Person  // Embedded struct
+    JobRole string
+}
+
+func main() {
+    emp := Employee{
+        Person: Person{Name: "Alice"},
+        JobRole: "Developer",
+    }
+    fmt.Println(emp.Name) // Access embedded field
+}
+```
+
+-  Go **does not** support classical inheritance, instead, it uses **composition**.
+
+---
+
+## **8️⃣ JSON Encoding & Decoding**
+
+Since JavaScript objects are natively JSON-compatible, they don’t need conversion.  
+Go `structs` require **serialization**.
+
+### **🔹 JavaScript: Direct JSON Handling**
+
+```js
+const user = { name: 'Alice', age: 25 };
+const jsonString = JSON.stringify(user);
+console.log(jsonString); // '{"name":"Alice","age":25}'
+
+const parsedUser = JSON.parse(jsonString);
+console.log(parsedUser.name); // Alice
+```
+
+### **🔹 Go: `json` Package**
+
+```go
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+)
+
+type User struct {
+    Name string `json:"name"`
+    Age  int    `json:"age"`
+}
+
+func main() {
+    user := User{Name: "Alice", Age: 25}
+
+    // Encode to JSON
+    jsonData, _ := json.Marshal(user)
+    fmt.Println(string(jsonData)) // {"name":"Alice","age":25}
+
+    // Decode from JSON
+    var decodedUser User
+    json.Unmarshal(jsonData, &decodedUser)
+    fmt.Println(decodedUser.Name) // Alice
+}
+```
+
+-  **Struct tags (`json:"name"`)** are needed for proper JSON field mapping.
+
+---
+
+## **9️⃣ Summary Table**
+
+| Feature               | Golang `struct`          | JavaScript Object          |
+| --------------------- | ------------------------ | -------------------------- |
+| **Typing**            | Statically typed         | Dynamically typed          |
+| **Property Addition** | Not allowed (fixed)      | Allowed (dynamic)          |
+| **Modification**      | Explicit (pointer)       | Implicit (reference)       |
+| **Inheritance**       | Composition (embedding)  | Prototypal inheritance     |
+| **Performance**       | Faster, optimized memory | Slower, dynamic allocation |
+| **Method Definition** | Separate function        | Can be added dynamically   |
+| **JSON Handling**     | Requires `json` package  | Native JSON support        |
+
+---
+
+## **🔟 Conclusion**
+
+✅ Use **JavaScript objects** for dynamic, flexible structures.  
+✅ Use **Go `structs`** for efficient, memory-safe, and static-typed structures.  
+✅ Prefer **struct embedding** over inheritance in Go.  
+✅ Use **pointer receivers** in Go when modifying struct fields inside methods.

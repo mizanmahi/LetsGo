@@ -2,84 +2,89 @@ package main
 
 import (
 	"fmt"
-	fileUtils "golangprac/file"
-
-	rand "github.com/Pallinder/go-randomdata"
+	"time"
 )
 
-// fmt is a package that provides I/O functions
-
-// there is basically two types of files in go executable(can be built and produces exe file, must need to have "package main" and a main func) and reusable
-
-func main() {
-
-	fmt.Println("Hello, ", rand.Email())
-
-	accountBalance, err := fileUtils.ReadBalanceFromFile()
-
-	if err != nil {
-		fmt.Println(err)
-		fmt.Println("Using default balance of 1000")
-
-		// alternatively we can use panic
-		// panic("Could not read balance from file")
-	}
-
-
-
-	   
-
-	// in GO we have only for loop and while loop is not there
-	// for i := 0; i < 5; i++ {
-	// 	fmt.Println("Enter your pin: ", i)
-	// }
-
-	// infinite loop, since there is no condition
-	fmt.Println("Welcome to Go bank")
-	 for {
-
-
-	 	communicate()
-
-
-		 var userChoice int
-		fmt.Scan(&userChoice)
-		fmt.Printf("You have selected %d\n", userChoice)
-	// using switch case
-		switch userChoice {
-			case 1:	fmt.Println("Your account balance is", accountBalance)
-			case 2: fmt.Println("Enter the amount to deposit")
-				var depositAmount float64
-				fmt.Scan(&depositAmount)
-				accountBalance += depositAmount
-		
-				fileUtils.SaveBalanceToFile(accountBalance)
-				fmt.Println("Your account balance is", accountBalance)
-			case 3: fmt.Println("Enter the amount to withdraw")
-				var withdrawAmount float64
-				fmt.Scan(&withdrawAmount)
-				if withdrawAmount > accountBalance {
-					fmt.Println("Insufficient balance")
-					continue;
-				} else {
-					accountBalance -= withdrawAmount
-					fileUtils.SaveBalanceToFile(accountBalance)
-					fmt.Println("Your account balance is", accountBalance)
-				}
-				if withdrawAmount <= 0 {
-					fmt.Println("Invalid amount")
-					continue;
-				}
-			case 4: fmt.Println("Thank you for using Go bank")
-			
-				fmt.Println("Your account balance is", accountBalance)
-				return;
-			default: fmt.Println("Invalid choice")
-				return;
-		}
-
-	}
-
-	
+// struct needs to be initialized with a type
+type person struct {
+	firstName string
+	lastName  string
+	birthdate string
+	createdAt time.Time
 }
 
+// 1. regular printing
+// func outputPersonData(p person) {
+	
+// 	fmt.Printf("First Name: %s, Last Name: %s, Birthdate: %s, Created At: %s\n", p.firstName, p.lastName, p.birthdate, p.createdAt)
+
+// }
+
+// 2. printing by passing the reference pointer
+// func outputPersonDataFromPointer(p *person) {
+
+// 	// go automatically dereference the p pointer, its an exception for struct
+// 	// normally we need to dereference
+
+// 	fmt.Println(p) // &{mizan mahi 19/07/25 {13973790209902737800 10979873601 0x75ed40}}
+// 	fmt.Println(&p) // 0xc00008e068
+
+	
+//     // single line
+// 	fmt.Printf("First Name: %s, Last Name: %s, Birthdate: %s, Created At: %s\n", p.firstName, p.lastName, p.birthdate, p.createdAt)
+// }
+
+// 3. printing by making a struct method
+func (p person) outputPersonDataFromPointer() {
+
+	// (p person) this basically a special type of parameter act as a receiver
+
+	// go automatically dereference the p pointer, its an exception for struct
+	// normally we need to dereference
+
+	fmt.Println(p) // &{mizan mahi 19/07/25 {13973790209902737800 10979873601 0x75ed40}}
+	fmt.Println(&p) // 0xc00008e068
+
+	
+    // single line
+	fmt.Printf("First Name: %s, Last Name: %s, Birthdate: %s, Created At: %s\n", p.firstName, p.lastName, p.birthdate, p.createdAt)
+}
+
+// clear user name with pointer receiver
+ func (p *person) clearName() {
+	 p.firstName = ""
+	 p.lastName = ""
+ }
+
+ // creation or constructor function
+func newPerson(firstName, lastName, birthdate string) person {
+	return person{firstName, lastName, birthdate, time.Now()}
+}
+
+
+func main() {
+	firstName := getUserData("Please enter your first name: ")
+	lastName := getUserData("Please enter your last name: ")
+	birthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
+
+	// ... do something awesome with that gathered data! 
+	newPerson := person{firstName, lastName, birthdate, time.Now()}
+	// outputPersonData(newPerson)
+	// outputPersonDataFromPointer(&newPerson)
+	newPerson.outputPersonDataFromPointer() // need to pass the struct instance for the receiver parameter
+	newPerson.clearName()
+}
+
+// func outputPersonData(p person) {
+	
+// 	fmt.Printf("First Name: %s, Last Name: %s, Birthdate: %s, Created At: %s\n", p.firstName, p.lastName, p.birthdate, p.createdAt)
+
+// }
+
+
+func getUserData(promptText string) string {
+	fmt.Print(promptText)
+	var value string
+	fmt.Scan(&value)
+	return value
+}
