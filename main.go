@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -11,8 +12,15 @@ import (
 // there is basically two types of files in go executable(can be built and produces exe file, must need to have "package main" and a main func) and reusable
 
 func main() {
-	accountBalance, _ := readBalanceFromFile()
+	accountBalance, err := readBalanceFromFile()
 
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Using default balance of 1000")
+
+		// alternatively we can use panic
+		// panic("Could not read balance from file")
+	}
 
 	// in GO we have only for loop and while loop is not there
 	// for i := 0; i < 5; i++ {
@@ -78,7 +86,10 @@ func saveBalanceToFile(balance float64) {
 }
 
 func readBalanceFromFile() (float64, error) {
-	balance, _ := os.ReadFile("balance.txt")
+	balance, err := os.ReadFile("balance.txt")
+	if err != nil {
+		return 1000, errors.New("file not found")
+	}
 	balanceString := string(balance)
 	return strconv.ParseFloat(balanceString, 64)
 
