@@ -15,6 +15,24 @@ type person struct {
 	createdAt time.Time
 }
 
+type Admin struct {
+	person
+	Permissions int
+}
+
+// factory function for admin
+func NewAdmin(firstName, lastName, birthdate string, permissions int) Admin {
+	return Admin{
+		person: person{
+			firstName: firstName,
+			lastName:  lastName,
+			birthdate: birthdate,
+			createdAt: time.Now(),
+		},
+		Permissions: permissions,
+	}
+}
+
 // 1. regular printing
 // func outputPersonData(p person) {
 	
