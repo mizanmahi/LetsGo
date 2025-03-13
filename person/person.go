@@ -17,7 +17,7 @@ type person struct {
 
 type Admin struct {
 	person
-	Permissions int
+	Permissions int `json:"permissions"` // this is called struct tag, useful when converting to json
 }
 
 // factory function for admin
