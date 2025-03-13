@@ -42,8 +42,8 @@ func (p person) outputPersonDataFromPointer() {
 	// go automatically dereference the p pointer, its an exception for struct
 	// normally we need to dereference
 
-	fmt.Println(p) // &{mizan mahi 19/07/25 {13973790209902737800 10979873601 0x75ed40}}
-	fmt.Println(&p) // 0xc00008e068
+	// fmt.Println(p) // &{mizan mahi 19/07/25 {13973790209902737800 10979873601 0x75ed40}}
+	// fmt.Println(&p) // 0xc00008e068
 
 	
     // single line
@@ -56,9 +56,16 @@ func (p person) outputPersonDataFromPointer() {
 	 p.lastName = ""
  }
 
- // creation or constructor function
-func newPerson(firstName, lastName, birthdate string) person {
-	return person{firstName, lastName, birthdate, time.Now()}
+ // 1. creation or constructor function
+// func newPerson(firstName, lastName, birthdate string) person {
+// 	return person{firstName, lastName, birthdate, time.Now()}
+// }
+
+ // 2. creation or constructor function with pointer receiver
+func newPerson(firstName, lastName, birthdate string) *person {
+	// returning a pointer also works
+	// could be used to validate the data before creating the struct
+	return &person{firstName, lastName, birthdate, time.Now()}
 }
 
 
@@ -68,7 +75,7 @@ func main() {
 	birthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
 
 	// ... do something awesome with that gathered data! 
-	newPerson := person{firstName, lastName, birthdate, time.Now()}
+	newPerson := newPerson(firstName, lastName, birthdate)
 	// outputPersonData(newPerson)
 	// outputPersonDataFromPointer(&newPerson)
 	newPerson.outputPersonDataFromPointer() // need to pass the struct instance for the receiver parameter
