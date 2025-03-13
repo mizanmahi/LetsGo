@@ -7,69 +7,72 @@ import "fmt"
 // there is basically two types of files in go executable(can be built and produces exe file, must need to have "package main" and a main func) and reusable
 
 func main() {
-
-	card := newCard()
-
+	accountBalance := 1000.0
 
 
-	// default value providing - 1
-	greet("Arish", 2)      // Calls original function
-	greetWithDefault("Ali") // Uses default age
-
-	// variadic example
-	greet2("Arish", 2)  // Uses given age
-	greet2("Ali")       // Uses default age 18
-
-	
 
 
-}
+	fmt.Println("Welcome to Go bank")
+	fmt.Println("Choose an action")
+	fmt.Println("1. Check Balance")
+	fmt.Println("2. Deposit")
+	fmt.Println("3. Withdraw")
+	fmt.Println("4. Exit")
 
-// basic function example return type must be specified
-func newCard() string {
-	return "Five of Diamonds"
-}
+	var userChoice int
+	fmt.Scan(&userChoice)
+	fmt.Printf("You have selected %d\n", userChoice)
 
-// function with parameters
-func newCard2(s string) string {
-	return s
-}
+	// if userChoice == 1 {
+	// 	fmt.Println("Your account balance is", accountBalance)
+	// } else if userChoice == 2 {
+	// 	fmt.Println("Enter the amount to deposit")
+	// 	var depositAmount float64
+	// 	fmt.Scan(&depositAmount)
+	// 	accountBalance += depositAmount
+	// 	fmt.Println("Your account balance is", accountBalance)
+	// } else if userChoice == 3 {
+	// 	fmt.Println("Enter the amount to withdraw")
+	// 	var withdrawAmount float64
+	// 	fmt.Scan(&withdrawAmount)
+	// 	if withdrawAmount > accountBalance {
+	// 		fmt.Println("Insufficient balance")
+	// 	} else {
+	// 		accountBalance -= withdrawAmount
+	// 		fmt.Println("Your account balance is", accountBalance)
+	// 	}
+	// 	if withdrawAmount <= 0 {
+	// 		fmt.Println("Invalid amount")
+	// 		return;
+	// 	}
+	// } else if userChoice == 4 {
+	// 	fmt.Println("Thank you for using Go bank")
+	// } else {
+	// 	fmt.Println("Invalid choice")
+	// }
 
-// function with multiple parameters
-func newCard3(s string, s2 string) string {
-	return s + s2
-}
-
-// function with multiple return types
-func newCard4(s string, s2 string) (string, string) {
-	return s, s2
-}
-
-// function with multiple return types and named return types
-func newCard5(s string, s2 string) (card string, card2 string) {
-	// adding name to return types allows you to return values without specifying return types
-	// card and card2 are the named return types and it creates the variables with the same name which can be used in the function and returned automatically
-	card = s
-	card2 = s2
-	return
-}
-
-
-// Function with explicit default value
-func greet(name string, age int) {
-	fmt.Printf("Hello, %s! You are %d years old.\n", name, age)
-}
-
-// Wrapper function to provide a default value
-func greetWithDefault(name string) {
-	greet(name, 18) // Default age = 18
-}
-
-
-func greet2(name string, ages ...int) {
-	age := 18 // Default value
-	if len(ages) > 0 {
-		age = ages[0]
+	// using switch case
+	switch userChoice {
+	case 1:	fmt.Println("Your account balance is", accountBalance)
+	case 2: fmt.Println("Enter the amount to deposit")
+		var depositAmount float64
+		fmt.Scan(&depositAmount)
+		accountBalance += depositAmount
+		fmt.Println("Your account balance is", accountBalance)
+	case 3: fmt.Println("Enter the amount to withdraw")
+		var withdrawAmount float64
+		fmt.Scan(&withdrawAmount)
+		if withdrawAmount > accountBalance {
+			fmt.Println("Insufficient balance")
+		} else {
+			accountBalance -= withdrawAmount
+			fmt.Println("Your account balance is", accountBalance)
+		}
+		if withdrawAmount <= 0 {
+			fmt.Println("Invalid amount")
+			return;
+		}
+	case 4: fmt.Println("Thank you for using Go bank")
+	default: fmt.Println("Invalid choice")
 	}
-	fmt.Printf("Hello, %s! You are %d years old.\n", name, age)
 }
