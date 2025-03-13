@@ -1,48 +1,96 @@
-// in go every file is called a package and we need to provide a name for the package, for the main file it is generally main.
 package main
 
-// in go we have many packages predefined which we can use in our application by importing, one of them is fmt which is a package that contains functions for formatting outputs.
 import (
+	"errors"
 	"fmt"
+	"os"
+	"strconv"
 )
 
-// go needs this function declaration otherwise go does'nt know where to start the code execution, the main function is the entry point of a go program, 1 main function per go application.
+// fmt is a package that provides I/O functions
+
+// there is basically two types of files in go executable(can be built and produces exe file, must need to have "package main" and a main func) and reusable
+
 func main() {
+	accountBalance, err := readBalanceFromFile()
 
-	// creating variables
-	var conferenceName = "Go Seminar" // Go infer the type of the variable based on the value assigned to it, and will throw error if later want to assign a different type to the variable. it could also be written like this with type declaration 
-	// var conferenceName string = "Go Seminar"
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Using default balance of 1000")
 
-	// const is used when we want to create a variable that will never change, it is a constant variable.
-	const conferenceTickets int = 50
+		// alternatively we can use panic
+		// panic("Could not read balance from file")
+	}
 
-	var availableTickets = 50
+	// in GO we have only for loop and while loop is not there
+	// for i := 0; i < 5; i++ {
+	// 	fmt.Println("Enter your pin: ", i)
+	// }
 
-	//@ we can also use the short hand notation for creating variables, the short hand notation is the := operator.
+	// infinite loop, since there is no condition
+	fmt.Println("Welcome to Go bank")
+	 for {
 
-	// we can print the type of a variable by using the %T placeholder
-	fmt.Printf("The type of the conferenceName is %T\n", conferenceName)
+	 	fmt.Println("Choose an action")
+		fmt.Println("1. Check Balance")
+		fmt.Println("2. Deposit")
+		fmt.Println("3. Withdraw")
+		fmt.Println("4. Exit")
 
-	// fmt.Println =>  this is called printline function.
-	// fmt.Printf => is used when we want to print a formatted string, it is a formatted print function.
+		var userChoice int
+		fmt.Scan(&userChoice)
+		fmt.Printf("You have selected %d\n", userChoice)
 
-	fmt.Printf("Let's go to the %v to learn more about Go \n", conferenceName)
-	fmt.Printf("Only %v tickets are available out of %v \n", conferenceTickets, availableTickets)
 
-	// when we create a variable without assigning any value to it, we need to provide the type of the variable.
-	var userName string
-	var userTickets int // some other int types are int8, int16, int32, int64, uint8, uint16, uint32, uint64, uintptr, byte, rune, float32, float64, complex64, complex128
+	// using switch case
+	switch userChoice {
+		case 1:	fmt.Println("Your account balance is", accountBalance)
+		case 2: fmt.Println("Enter the amount to deposit")
+			var depositAmount float64
+			fmt.Scan(&depositAmount)
+			accountBalance += depositAmount
+			saveBalanceToFile(accountBalance)
+			fmt.Println("Your account balance is", accountBalance)
+		case 3: fmt.Println("Enter the amount to withdraw")
+			var withdrawAmount float64
+			fmt.Scan(&withdrawAmount)
+			if withdrawAmount > accountBalance {
+				fmt.Println("Insufficient balance")
+				continue;
+			} else {
+				accountBalance -= withdrawAmount
+				saveBalanceToFile(accountBalance)
+				fmt.Println("Your account balance is", accountBalance)
+			}
+			if withdrawAmount <= 0 {
+				fmt.Println("Invalid amount")
+				continue;
+			}
+		case 4: fmt.Println("Thank you for using Go bank")
+		   
+			fmt.Println("Your account balance is", accountBalance)
+			 return;
+		default: fmt.Println("Invalid choice")
+			return;
+		}
 
-	fmt.Printf("Please enter your name: ")
-	fmt.Scan(&userName) // this is a function that reads the input from the user and stores it in the variable. & is used to pass the address of the variable. which is called a pointer.
+	}
 
-	fmt.Printf("Please the amount of ticket: ")
-	fmt.Scan(&userTickets)
+	
+}
 
-	fmt.Printf("Hello %v, you have just purchased %v ticket\n", userName, userTickets)
+func saveBalanceToFile(balance float64) {
 
-	availableTickets = availableTickets - userTickets
+	balanceString :=  fmt.Sprint(balance)
+	os.WriteFile("balance.txt", []byte(balanceString), 0644)
+}
 
-	fmt.Printf("Only %v tickets are available out of %v \n", availableTickets, conferenceTickets)
+func readBalanceFromFile() (float64, error) {
+	balance, err := os.ReadFile("balance.txt")
+	if err != nil {
+		return 1000, errors.New("file not found")
+	}
+	balanceString := string(balance)
+	return strconv.ParseFloat(balanceString, 64)
 
 }
