@@ -1,75 +1,32 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strings"
-
-	"interfacePrac/note"
-	"interfacePrac/todo"
 )
 
-type saver interface {
-	Save() error
-}
+func main () {
+	names := [3]string{"a", "b", "c"}
+	fmt.Println(names)
+	fmt.Println(names[2])
 
-func main() {
-	title, content := getNoteData()
-	todoTitle := getUserInput("Todo title:")
+	selectedNames := names[0:len(names)] // slice, second index is not included
+	fmt.Println(selectedNames)
 
-	userNote, err := note.New(title, content)
-	userTodo, todoErr := todo.New(todoTitle)
-
-	if err != nil {
-		fmt.Println(err)
-		return
+	// map
+	websites := map[string]string{
+		"google": "https://google.com",
+		"facebook": "https://facebook.com",
 	}
+	fmt.Println(websites)
+	fmt.Println(websites["google"])
 
-	if todoErr != nil {
-		fmt.Println(todoErr)
-		return
-	}
+	// add new key-value pair
+	websites["twitter"] = "https://twitter.com"
+	fmt.Println(websites)
 
-	userTodo.Display()
-	userNote.Display()
+	// delete key-value pair
+	delete(websites, "google")
 
-	saveData(userNote)
-	saveData(userTodo)
-
-}
-
-func saveData(data saver){
-	err := data.Save()
-
-	if err != nil {
-		fmt.Println("Saving the data failed.")
-		return
-	}
-
-	fmt.Println("Saving the data succeeded!")
-}
-
-func getNoteData() (string, string) {
-	title := getUserInput("Note title:")
-	content := getUserInput("Note content:")
-
-	return title, content
-}
-
-func getUserInput(prompt string) string {
-	fmt.Printf("%v ", prompt)
-
-	reader := bufio.NewReader(os.Stdin)
-
-	text, err := reader.ReadString('\n')
-
-	if err != nil {
-		return ""
-	}
-
-	text = strings.TrimSuffix(text, "\n")
-	text = strings.TrimSuffix(text, "\r")
-
-	return text
+	// update value
+	websites["facebook"] = "https://facebook.com/updated"
 }

@@ -1,257 +1,208 @@
-A **cheat sheet** for **Go interfaces** and **generics**. 🚀
+# **Go Arrays Cheat Sheet** 🚀
 
----
+## **1. What is an Array in Go?**
 
-# **Go Interfaces & Generics Cheat Sheet**
-
-## **1. Interfaces in Go**
-
-### What is an Interface?
-
--  A **contract** that defines a **set of methods** that a type must implement.
--  Interfaces **only specify behavior**, not implementation.
--  Any type that implements **all methods** of an interface **automatically satisfies it** (no explicit declaration needed).
-
-### Declaring an Interface:
+-  **Fixed-size** collection of elements of the **same type**.
+-  Cannot grow or shrink in size.
+-  Indexed from `0` (first element) to `n-1` (last element).
 
 ```go
-type Speaker interface {
-    Speak() string
-}
-```
-
-### Implementing an Interface
-
--  A type satisfies an interface if it implements **all methods** defined by the interface.
--  **No need to explicitly specify** that a type implements an interface.
-
-```go
-type Person struct {
-    Name string
-}
-
-// Implementing the interface method
-func (p Person) Speak() string {
-    return "Hello, I am " + p.Name
-}
-
-// This function can accept any type that implements the Speaker interface
-func SpeakSomething(s Speaker) {
-    fmt.Println(s.Speak())
-}
-
-func main() {
-    p := Person{Name: "Mizan"}
-    fmt.Println(p.Speak()) // "Hello, I am Mizan"
-
-    var s Speaker = p // Assign struct to interface
-    fmt.Println(s.Speak()) // "Hello, I am Mizan"
-}
+var arr [5]int // Declaring an array of size 5 with default values (0)
+fmt.Println(arr) // Output: [0 0 0 0 0]
 ```
 
 ---
 
-### Interface with Multiple Methods
+## **2. Initializing Arrays**
 
 ```go
-type Reader interface {
-    Read() string
-}
+// Declare and Initialize
+var nums = [5]int{1, 2, 3, 4, 5}
+fmt.Println(nums) // Output: [1 2 3 4 5]
 
-type Writer interface {
-    Write(s string)
-}
+// Using shorthand
+nums2 := [3]int{10, 20, 30}
+fmt.Println(nums2) // Output: [10 20 30]
 
-type ReaderWriter interface {
-    Reader
-    Writer
-}
+// Let Go determine the size
+nums3 := [...]int{100, 200, 300}
+fmt.Println(nums3) // Output: [100 200 300]
 
-// Implementing multiple interfaces
-type File struct{}
-
-func (f File) Read() string {
-    return "Reading from file"
-}
-
-func (f File) Write(s string) {
-    fmt.Println("Writing:", s)
-}
-
-func main() {
-    var rw ReaderWriter = File{}
-    fmt.Println(rw.Read()) // Works because File implements Read
-    rw.Write("Hello")      // Works because File implements Writer
-}
+// Default values (all 0)
+var defaultArr [4]int
+fmt.Println(defaultArr) // Output: [0 0 0 0]
 ```
 
 ---
 
-## **Go Generics (Since Go 1.18)**
-
-Generics allow defining functions or types that work with **any data type**.
-
-### Generic Function Example
+## **3. Accessing & Modifying Elements**
 
 ```go
-package main
+arr := [3]string{"Go", "Rust", "Python"}
 
-import "fmt"
+// Access element by index
+fmt.Println(arr[0]) // Output: Go
 
-// Generic function
-func Print[T any](value T) {
+// Modify element
+arr[2] = "JavaScript"
+fmt.Println(arr) // Output: [Go Rust JavaScript]
+```
+
+---
+
+## **4. Looping Through an Array**
+
+```go
+nums := [5]int{10, 20, 30, 40, 50}
+
+// Using for loop (index-based)
+for i := 0; i < len(nums); i++ {
+    fmt.Println(nums[i])
+}
+
+// Using range (index, value)
+for index, value := range nums {
+    fmt.Printf("Index: %d, Value: %d\n", index, value)
+}
+
+// Ignoring index (_)
+for _, value := range nums {
     fmt.Println(value)
 }
-
-func main() {
-    Print(42)      // 42
-    Print("hello") // hello
-}
 ```
 
-### Generic Structs
+---
+
+## **5. Array Length**
 
 ```go
-type Box[T any] struct {
-    value T
-}
-
-func (b Box[T]) Get() T {
-    return b.value
-}
-
-func main() {
-    intBox := Box[int]{value: 42}
-    fmt.Println("Int Box:", intBox.value) // Int Box: 42
-
-    strBox := Box[string]{value: "Hello"}
-    fmt.Println("String Box:", strBox.value) // Hello
-}
+arr := [4]string{"Go", "Python", "Java", "C++"}
+fmt.Println(len(arr)) // Output: 4
 ```
 
-### Generic Interface
+---
+
+## **6. Copying Arrays (Value Copy)**
+
+-  Arrays are **copied by value**, meaning changes in one **do not** affect the other.
 
 ```go
-package main
+arr1 := [3]int{1, 2, 3}
+arr2 := arr1  // Copying array (new independent array)
+arr2[0] = 100 // Changing arr2 does not affect arr1
 
-import "fmt"
+fmt.Println(arr1) // Output: [1 2 3]
+fmt.Println(arr2) // Output: [100 2 3]
+```
 
-type Printer[T any] interface {
-    Print(T)
+---
+
+## **7. Multidimensional Arrays**
+
+```go
+var matrix [2][3]int // 2 rows, 3 columns
+matrix = [2][3]int{
+    {1, 2, 3},
+    {4, 5, 6},
 }
 
-type ConsolePrinter[T any] struct{}
+// Accessing elements
+fmt.Println(matrix[0][1]) // Output: 2
 
-func (c ConsolePrinter[T]) Print(data T) {
-    fmt.Println(data)
-}
-
-func main() {
-    var intPrinter ConsolePrinter[int]
-    intPrinter.Print(100) // Prints: 100
-
-    var strPrinter ConsolePrinter[string]
-    strPrinter.Print("Hello, Generics!") // Hello, Generics!
+// Looping through 2D array
+for _, row := range matrix {
+    for _, col := range row {
+        fmt.Print(col, " ")
+    }
+    fmt.Println()
 }
 ```
 
 ---
 
-### Type Constraints
+## **8. Array Manipulations**
 
-Go 1.18 introduced the `constraints` package for defining **type constraints**.
+### **Reverse an Array**
 
 ```go
-package main
+arr := [5]int{1, 2, 3, 4, 5}
+n := len(arr)
 
-import "fmt"
-
-// Constraint: T must be int or float64
-type Number interface {
-    int | float64
+for i := 0; i < n/2; i++ {
+    arr[i], arr[n-1-i] = arr[n-1-i], arr[i]
 }
 
-// Generic function with constraint
-func Add[T Number](a, b T) T {
-    return a + b
-}
-
-func main() {
-    fmt.Println(Add(10, 20))     // Works with integers
-    fmt.Println(Add(3.5, 2.2)) // Works with floats
-}
+fmt.Println(arr) // Output: [5 4 3 2 1]
 ```
 
 ---
 
-### Using `any` as a Generic Type
-
--  **`any`** is an alias for `interface{}` in Go 1.18+.
--  It allows any type, but doesn't enforce method constraints.
+### **Find the Maximum Value**
 
 ```go
-func PrintAnything[T any](value T) {
-    fmt.Println(value)
-}
+arr := [5]int{10, 50, 30, 90, 20}
+max := arr[0]
 
-func main() {
-    PrintAnything(100)
-    PrintAnything("Go Generics!")
-}
-```
-
----
-
-### Generic Methods in Struct
-
-```go
-type Container[T any] struct {
-    value T
-}
-
-func (c *Container[T]) GetValue() T {
-    return c.value
-}
-
-func main() {
-    c := Container[int]{value: 10}
-    fmt.Println(c.GetValue()) // 10
-
-    strContainer := Container[string]{value: "Hello"}
-    fmt.Println(strContainer.GetValue()) // Hello
-}
-```
-
----
-
-### Type Switch with Interface
-
-If you use `any`, you may need **type assertions** or **type switches**:
-
-```go
-func PrintValue(value any) {
-    switch v := value.(type) {
-    case string:
-        fmt.Println("String:", v)
-    case int:
-        fmt.Println("Integer:", v)
-    default:
-        fmt.Println("Unknown Type")
+for _, v := range arr {
+    if v > max {
+        max = v
     }
 }
 
-func main() {
-    PrintAnything(42)      // Integer: 42
-    PrintAnything("Go")    // String: Go
-    PrintAnything(3.14)    // Unknown Type
-}
+fmt.Println("Max value:", max) // Output: Max value: 90
 ```
 
 ---
 
-### Benefits of Generics
+### **Sum of Array Elements**
 
-✅ **Code Reusability** – Write reusable functions and structs that work with different data types.  
-✅ **Type Safety** – Ensures that type safety is maintained at **compile time**.  
-✅ **Avoids Code Duplication** – No need to write the same logic for multiple types.  
-✅ **Improved Performance** – Reduces the need for type assertions, improving runtime efficiency.
+```go
+arr := [4]int{5, 10, 15, 20}
+sum := 0
+
+for _, v := range arr {
+    sum += v
+}
+
+fmt.Println("Sum:", sum) // Output: Sum: 50
+```
+
+---
+
+### **Checking if an Element Exists**
+
+```go
+arr := [5]int{10, 20, 30, 40, 50}
+target := 30
+found := false
+
+for _, v := range arr {
+    if v == target {
+        found = true
+        break
+    }
+}
+
+fmt.Println("Element exists:", found) // Output: Element exists: true
+```
+
+---
+
+## **9. Difference Between Arrays & Slices**
+
+| Feature     | Array                                    | Slice                                              |
+| ----------- | ---------------------------------------- | -------------------------------------------------- |
+| Size        | Fixed                                    | Dynamic                                            |
+| Memory      | Stores all elements in contiguous memory | References underlying array                        |
+| Copying     | Creates a new copy                       | Shares memory with the original                    |
+| Flexibility | Limited                                  | More flexible (supports appending, resizing, etc.) |
+
+---
+
+### **10. Convert Array to Slice**
+
+```go
+arr := [5]int{1, 2, 3, 4, 5}
+slice := arr[:] // Convert entire array to slice
+fmt.Println(slice) // Output: [1 2 3 4 5]
+```
