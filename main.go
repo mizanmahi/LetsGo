@@ -1,66 +1,36 @@
 package main
 
-import (
-	"fmt"
-)
+import "fmt"
 
-func main () {
-	// names := [3]string{"a", "b", "c"}
-	// fmt.Println(names)
-	// fmt.Println(names[2])
+func main() {
 
-	// selectedNames := names[0:len(names)] // slice, second index is not included
-	// fmt.Println(selectedNames)
+	// anonymous function
+	func() {
+		println("Hello World")
+	}() 
+	// function with parameter
+	func(a int, b int) {
+		println(a + b)
+	}(1, 2) 
 
-	// // map
-	// websites := map[string]string{
-	// 	"google": "https://google.com",
-	// 	"facebook": "https://facebook.com",
-	// }
-	// fmt.Println(websites)
-	// fmt.Println(websites["google"])
-
-	// // add new key-value pair
-	// websites["twitter"] = "https://twitter.com"
-	// fmt.Println(websites)
-
-	// // delete key-value pair
-	// delete(websites, "google")
-
-	// // update value
-	// websites["facebook"] = "https://facebook.com/updated"
-
-
-
-	// example of make() function
-	// make(map[key-type]value-type, initial size)
-	websites2 := make(map[string]string, 10) // max 10 key-value pairs can be stored
-	websites2["google"] = "https://google.com"
-	websites2["facebook"] = "https://facebook.com"
-	fmt.Println(websites2)
-
-	// example of make() function with slice
-	names := make([]string, 3, 10)
-	names[0] = "a"
-	names[1] = "b"
-	names[2] = "c"
-	names = append(names, "d")
-	fmt.Println(names)
-
-	// for loop on array
-	for i := range names {
-		fmt.Println(names[i])
-	}
-
-	// for loop on slice
-	for i := range names {
-		fmt.Println(names[i])
-	}
-
-	// for loop on map
-	for key, value := range websites2 {
-		fmt.Println(key, value)
-	}
-
-
+	fmt.Println(super(5))
+	
+	
+	
 }
+func super(n int) int {
+	if n == 1 {
+		return 1
+	}
+	return n * super(n-1)
+}
+
+// variadic function
+func sum(num ...int) int {
+	total := 0
+	for _, v := range num {
+		total += v
+	}
+	return total
+}
+

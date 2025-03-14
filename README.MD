@@ -1,208 +1,384 @@
-# **Go Arrays Cheat Sheet** 🚀
+# **Go Functions Cheat Sheet** 🚀
 
-## **1. What is an Array in Go?**
+## **1. Declaring a Function**
 
--  **Fixed-size** collection of elements of the **same type**.
--  Cannot grow or shrink in size.
--  Indexed from `0` (first element) to `n-1` (last element).
+A function in Go starts with the `func` keyword, followed by the function name, parameters, return type, and the function body.
 
 ```go
-var arr [5]int // Declaring an array of size 5 with default values (0)
-fmt.Println(arr) // Output: [0 0 0 0 0]
-```
-
----
-
-## **2. Initializing Arrays**
-
-```go
-// Declare and Initialize
-var nums = [5]int{1, 2, 3, 4, 5}
-fmt.Println(nums) // Output: [1 2 3 4 5]
-
-// Using shorthand
-nums2 := [3]int{10, 20, 30}
-fmt.Println(nums2) // Output: [10 20 30]
-
-// Let Go determine the size
-nums3 := [...]int{100, 200, 300}
-fmt.Println(nums3) // Output: [100 200 300]
-
-// Default values (all 0)
-var defaultArr [4]int
-fmt.Println(defaultArr) // Output: [0 0 0 0]
-```
-
----
-
-## **3. Accessing & Modifying Elements**
-
-```go
-arr := [3]string{"Go", "Rust", "Python"}
-
-// Access element by index
-fmt.Println(arr[0]) // Output: Go
-
-// Modify element
-arr[2] = "JavaScript"
-fmt.Println(arr) // Output: [Go Rust JavaScript]
-```
-
----
-
-## **4. Looping Through an Array**
-
-```go
-nums := [5]int{10, 20, 30, 40, 50}
-
-// Using for loop (index-based)
-for i := 0; i < len(nums); i++ {
-    fmt.Println(nums[i])
+func greet() {
+    fmt.Println("Hello, World!")
 }
 
-// Using range (index, value)
-for index, value := range nums {
-    fmt.Printf("Index: %d, Value: %d\n", index, value)
-}
-
-// Ignoring index (_)
-for _, value := range nums {
-    fmt.Println(value)
+func main() {
+    greet() // Output: Hello, World!
 }
 ```
 
 ---
 
-## **5. Array Length**
+## **2. Function with Parameters**
 
 ```go
-arr := [4]string{"Go", "Python", "Java", "C++"}
-fmt.Println(len(arr)) // Output: 4
-```
-
----
-
-## **6. Copying Arrays (Value Copy)**
-
--  Arrays are **copied by value**, meaning changes in one **do not** affect the other.
-
-```go
-arr1 := [3]int{1, 2, 3}
-arr2 := arr1  // Copying array (new independent array)
-arr2[0] = 100 // Changing arr2 does not affect arr1
-
-fmt.Println(arr1) // Output: [1 2 3]
-fmt.Println(arr2) // Output: [100 2 3]
-```
-
----
-
-## **7. Multidimensional Arrays**
-
-```go
-var matrix [2][3]int // 2 rows, 3 columns
-matrix = [2][3]int{
-    {1, 2, 3},
-    {4, 5, 6},
+func greet(name string) {
+    fmt.Println("Hello,", name)
 }
 
-// Accessing elements
-fmt.Println(matrix[0][1]) // Output: 2
+func main() {
+    greet("Mizan") // Output: Hello, Mizan
+}
+```
 
-// Looping through 2D array
-for _, row := range matrix {
-    for _, col := range row {
-        fmt.Print(col, " ")
+---
+
+## **3. Function with Multiple Parameters**
+
+```go
+func add(a int, b int) int {
+    return a + b
+}
+
+func main() {
+    result := add(5, 7)
+    fmt.Println(result) // Output: 12
+}
+```
+
+---
+
+## **4. Function with Multiple Return Values**
+
+```go
+func swap(x, y string) (string, string) {
+    return y, x
+}
+
+func main() {
+    a, b := swap("Hello", "World")
+    fmt.Println(a, b) // Output: World Hello
+}
+```
+
+---
+
+## **5. Named Return Values**
+
+You can name return values, which makes the function more readable.
+
+```go
+func divide(a, b float64) (quotient float64, remainder float64) {
+    quotient = a / b
+    remainder = float64(int(a) % int(b))
+    return // Implicit return of named values
+}
+
+func main() {
+    q, r := divide(10, 3)
+    fmt.Println(q, r) // Output: 3.3333333333333335 1
+}
+```
+
+---
+
+## **6. Variadic Functions (Multiple Arguments of the Same Type)**
+
+```go
+func sum(numbers ...int) int {
+    total := 0
+    for _, num := range numbers {
+        total += num
     }
-    fmt.Println()
+    return total
+}
+
+func main() {
+    fmt.Println(sum(1, 2, 3, 4, 5)) // Output: 15
 }
 ```
 
 ---
 
-## **8. Array Manipulations**
+## **7. Function as a Value (First-Class Functions)**
 
-### **Reverse an Array**
+Functions can be assigned to variables and passed around.
 
 ```go
-arr := [5]int{1, 2, 3, 4, 5}
-n := len(arr)
-
-for i := 0; i < n/2; i++ {
-    arr[i], arr[n-1-i] = arr[n-1-i], arr[i]
+func multiply(a, b int) int {
+    return a * b
 }
 
-fmt.Println(arr) // Output: [5 4 3 2 1]
+func main() {
+    op := multiply
+    fmt.Println(op(3, 4)) // Output: 12
+}
 ```
 
 ---
 
-### **Find the Maximum Value**
+## **8. Anonymous (Lambda) Functions**
+
+You can define functions without a name.
 
 ```go
-arr := [5]int{10, 50, 30, 90, 20}
-max := arr[0]
+func main() {
+    sum := func(a, b int) int {
+        return a + b
+    }
+    fmt.Println(sum(10, 5)) // Output: 15
+}
+```
 
-for _, v := range arr {
-    if v > max {
-        max = v
+---
+
+## **9. Function Closures**
+
+A function can return another function that retains state.
+
+```go
+func counter() func() int {
+    count := 0
+    return func() int {
+        count++
+        return count
     }
 }
 
-fmt.Println("Max value:", max) // Output: Max value: 90
+func main() {
+    increment := counter()
+    fmt.Println(increment()) // Output: 1
+    fmt.Println(increment()) // Output: 2
+}
 ```
 
 ---
 
-### **Sum of Array Elements**
+## **10. Passing Functions as Arguments**
 
 ```go
-arr := [4]int{5, 10, 15, 20}
-sum := 0
-
-for _, v := range arr {
-    sum += v
+func applyOperation(a, b int, op func(int, int) int) int {
+    return op(a, b)
 }
 
-fmt.Println("Sum:", sum) // Output: Sum: 50
+func main() {
+    add := func(x, y int) int { return x + y }
+    fmt.Println(applyOperation(5, 3, add)) // Output: 8
+}
 ```
 
 ---
 
-### **Checking if an Element Exists**
+## **11. Defer (Delayed Execution)**
+
+`defer` postpones function execution until surrounding function exits.
 
 ```go
-arr := [5]int{10, 20, 30, 40, 50}
-target := 30
-found := false
+func main() {
+    defer fmt.Println("This is printed last")
+    fmt.Println("This is printed first")
+}
 
-for _, v := range arr {
-    if v == target {
-        found = true
-        break
+// Output:
+// This is printed first
+// This is printed last
+```
+
+---
+
+## **12. Panic & Recover (Handling Errors)**
+
+Use `panic()` to terminate a function and `recover()` to catch panics.
+
+```go
+func safeDivide(a, b int) {
+    defer func() {
+        if r := recover(); r != nil {
+            fmt.Println("Recovered from panic:", r)
+        }
+    }()
+
+    if b == 0 {
+        panic("division by zero")
+    }
+
+    fmt.Println("Result:", a/b)
+}
+
+func main() {
+    safeDivide(10, 0) // Output: Recovered from panic: division by zero
+}
+```
+
+---
+
+## **13. Recursive Function**
+
+A function calling itself (useful for factorial, Fibonacci, etc.).
+
+```go
+func factorial(n int) int {
+    if n == 0 {
+        return 1
+    }
+    return n * factorial(n-1)
+}
+
+func main() {
+    fmt.Println(factorial(5)) // Output: 120
+}
+```
+
+---
+
+## **14. Higher-Order Functions (Function Returning a Function)**
+
+```go
+func multiplier(factor int) func(int) int {
+    return func(x int) int {
+        return x * factor
     }
 }
 
-fmt.Println("Element exists:", found) // Output: Element exists: true
+func main() {
+    double := multiplier(2)
+    fmt.Println(double(5)) // Output: 10
+}
 ```
 
 ---
 
-## **9. Difference Between Arrays & Slices**
+## **15. Methods (Functions with Structs)**
 
-| Feature     | Array                                    | Slice                                              |
-| ----------- | ---------------------------------------- | -------------------------------------------------- |
-| Size        | Fixed                                    | Dynamic                                            |
-| Memory      | Stores all elements in contiguous memory | References underlying array                        |
-| Copying     | Creates a new copy                       | Shares memory with the original                    |
-| Flexibility | Limited                                  | More flexible (supports appending, resizing, etc.) |
-
----
-
-### **10. Convert Array to Slice**
+Methods in Go are functions that operate on structs.
 
 ```go
-arr := [5]int{1, 2, 3, 4, 5}
-slice := arr[:] // Convert entire array to slice
-fmt.Println(slice) // Output: [1 2 3 4 5]
+type Person struct {
+    Name string
+    Age  int
+}
+
+// Method on struct
+func (p Person) greet() {
+    fmt.Printf("Hello, my name is %s and I am %d years old.\n", p.Name, p.Age)
+}
+
+func main() {
+    p := Person{"Alice", 30}
+    p.greet() // Output: Hello, my name is Alice and I am 30 years old.
+}
 ```
+
+---
+
+## **16. Pointer Receiver Methods (Modifying Structs)**
+
+Use pointer receivers (`*`) to modify struct fields.
+
+```go
+type Counter struct {
+    Value int
+}
+
+func (c *Counter) Increment() {
+    c.Value++
+}
+
+func main() {
+    c := Counter{}
+    c.Increment()
+    fmt.Println(c.Value) // Output: 1
+}
+```
+
+---
+
+## **17. Function with Interface Parameters**
+
+```go
+type Speaker interface {
+    Speak()
+}
+
+type Dog struct{}
+
+func (d Dog) Speak() {
+    fmt.Println("Woof!")
+}
+
+func makeSpeak(s Speaker) {
+    s.Speak()
+}
+
+func main() {
+    d := Dog{}
+    makeSpeak(d) // Output: Woof!
+}
+```
+
+---
+
+## **18. Function Pointer Example**
+
+You can use function pointers for dynamic function calls.
+
+```go
+func sayHello() {
+    fmt.Println("Hello, World!")
+}
+
+func executeFunction(f func()) {
+    f()
+}
+
+func main() {
+    executeFunction(sayHello) // Output: Hello, World!
+}
+```
+
+---
+
+## **19. Benchmarking Functions**
+
+Use the `testing` package for benchmarking.
+
+```go
+import "testing"
+
+func BenchmarkSum(b *testing.B) {
+    for i := 0; i < b.N; i++ {
+        _ = sum(1, 2, 3, 4, 5)
+    }
+}
+```
+
+---
+
+## **20. Function Composition (Combining Functions)**
+
+```go
+func addOne(x int) int {
+    return x + 1
+}
+
+func double(x int) int {
+    return x * 2
+}
+
+func compose(f, g func(int) int) func(int) int {
+    return func(x int) int {
+        return f(g(x))
+    }
+}
+
+func main() {
+    addThenDouble := compose(double, addOne)
+    fmt.Println(addThenDouble(3)) // Output: 8
+}
+```
+
+---
+
+## **Summary**
+
+✅ Functions in Go are **first-class citizens** (pass them as arguments, return them).  
+✅ Supports **multiple return values**, **named returns**, and **variadic arguments**.  
+✅ Methods can be **attached to structs** (value or pointer receivers).  
+✅ **Defer**, **panic**, and **recover** help with execution flow & error handling.
