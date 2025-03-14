@@ -1,75 +1,36 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-
-	"interfacePrac/note"
-	"interfacePrac/todo"
-)
-
-type saver interface {
-	Save() error
-}
+import "fmt"
 
 func main() {
-	title, content := getNoteData()
-	todoTitle := getUserInput("Todo title:")
 
-	userNote, err := note.New(title, content)
-	userTodo, todoErr := todo.New(todoTitle)
+	// anonymous function
+	func() {
+		println("Hello World")
+	}() 
+	// function with parameter
+	func(a int, b int) {
+		println(a + b)
+	}(1, 2) 
 
-	if err != nil {
-		fmt.Println(err)
-		return
+	fmt.Println(super(5))
+	
+	
+	
+}
+func super(n int) int {
+	if n == 1 {
+		return 1
 	}
-
-	if todoErr != nil {
-		fmt.Println(todoErr)
-		return
-	}
-
-	userTodo.Display()
-	userNote.Display()
-
-	saveData(userNote)
-	saveData(userTodo)
-
+	return n * super(n-1)
 }
 
-func saveData(data saver){
-	err := data.Save()
-
-	if err != nil {
-		fmt.Println("Saving the data failed.")
-		return
+// variadic function
+func sum(num ...int) int {
+	total := 0
+	for _, v := range num {
+		total += v
 	}
-
-	fmt.Println("Saving the data succeeded!")
+	return total
 }
 
-func getNoteData() (string, string) {
-	title := getUserInput("Note title:")
-	content := getUserInput("Note content:")
-
-	return title, content
-}
-
-func getUserInput(prompt string) string {
-	fmt.Printf("%v ", prompt)
-
-	reader := bufio.NewReader(os.Stdin)
-
-	text, err := reader.ReadString('\n')
-
-	if err != nil {
-		return ""
-	}
-
-	text = strings.TrimSuffix(text, "\n")
-	text = strings.TrimSuffix(text, "\r")
-
-	return text
-}
