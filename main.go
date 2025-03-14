@@ -1,34 +1,75 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"structPrac/person"
+	"os"
+	"strings"
+
+	"interfacePrac/note"
+	"interfacePrac/todo"
 )
 
-
-func main() {
-	firstName := getUserData("Please enter your first name: ")
-	lastName := getUserData("Please enter your last name: ")
-	birthdate := getUserData("Please enter your birthdate (MM/DD/YYYY): ")
-
-	// ... do something awesome with that gathered data! 
-	newPerson := person.NewPerson(firstName, lastName, birthdate)
-	// outputPersonData(newPerson)
-	// outputPersonDataFromPointer(&newPerson)
-	newPerson.OutputPersonDataFromPointer() // need to pass the struct instance for the receiver parameter
-	newPerson.ClearName()
+type saver interface {
+	Save() error
 }
 
-// func outputPersonData(p person) {
-	
-// 	fmt.Printf("First Name: %s, Last Name: %s, Birthdate: %s, Created At: %s\n", p.firstName, p.lastName, p.birthdate, p.createdAt)
+func main() {
+	title, content := getNoteData()
+	todoTitle := getUserInput("Todo title:")
 
-// }
+	userNote, err := note.New(title, content)
+	userTodo, todoErr := todo.New(todoTitle)
 
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
-func getUserData(promptText string) string {
-	fmt.Print(promptText)
-	var value string
-	fmt.Scan(&value)
-	return value
+	if todoErr != nil {
+		fmt.Println(todoErr)
+		return
+	}
+
+	userTodo.Display()
+	userNote.Display()
+
+	saveData(userNote)
+	saveData(userTodo)
+
+}
+
+func saveData(data saver){
+	err := data.Save()
+
+	if err != nil {
+		fmt.Println("Saving the data failed.")
+		return
+	}
+
+	fmt.Println("Saving the data succeeded!")
+}
+
+func getNoteData() (string, string) {
+	title := getUserInput("Note title:")
+	content := getUserInput("Note content:")
+
+	return title, content
+}
+
+func getUserInput(prompt string) string {
+	fmt.Printf("%v ", prompt)
+
+	reader := bufio.NewReader(os.Stdin)
+
+	text, err := reader.ReadString('\n')
+
+	if err != nil {
+		return ""
+	}
+
+	text = strings.TrimSuffix(text, "\n")
+	text = strings.TrimSuffix(text, "\r")
+
+	return text
 }
