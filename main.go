@@ -1,36 +1,36 @@
 package main
 
-import "fmt"
+import (
+	"chi-project/config"
+	"chi-project/routes"
+	"fmt"
+	"log"
+	"net/http"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+)
+
 
 func main() {
 
-	// anonymous function
-	func() {
-		println("Hello World")
-	}() 
-	// function with parameter
-	func(a int, b int) {
-		println(a + b)
-	}(1, 2) 
+	config.LoadEnvs()
 
-	fmt.Println(super(5))
-	
-	
-	
-}
-func super(n int) int {
-	if n == 1 {
-		return 1
-	}
-	return n * super(n-1)
-}
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
 
-// variadic function
-func sum(num ...int) int {
-	total := 0
-	for _, v := range num {
-		total += v
-	}
-	return total
-}
+	routes.UserRoutes(router)
+	routes.PostRoutes(router)
 
+	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("welcome"))
+	})
+
+
+	// Start Server
+	port := config.AppConfig.Port
+	fmt.Printf("Server running on port %s...\n", port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
+	
+
+}
