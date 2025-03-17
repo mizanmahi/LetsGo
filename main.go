@@ -2,6 +2,7 @@ package main
 
 import (
 	"chi-project/config"
+	"chi-project/database"
 	"chi-project/routes"
 	"fmt"
 	"log"
@@ -25,6 +26,9 @@ func main() {
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))
 	})
+
+	// Connect database
+	database.ConnectDB()
 
 
 	// Start Server
