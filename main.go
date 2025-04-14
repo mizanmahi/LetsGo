@@ -3,6 +3,7 @@ package main
 import (
 	"chi-project/config"
 	"chi-project/routes"
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -11,8 +12,17 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 )
 
+const dbString = "postgres://postgres:postgres@localhost:5432/gocrud?sslmode=disable"
+
 
 func main() {
+
+	db, err := sql.Open("postgres", dbString)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 
 	config.LoadEnvs()
 
