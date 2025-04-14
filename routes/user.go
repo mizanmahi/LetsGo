@@ -8,6 +8,7 @@ import (
 
 func UserRoutes(router *chi.Mux) {
 	router.Route("/users", func(r chi.Router) {
-		r.Get("/", controllers.GetUsers) 
+		r.Post("/", controllers.CreateUser) 
+		r.Get("/", controllers.GetUsers)
 	})
 }
