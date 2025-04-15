@@ -58,6 +58,15 @@ func main() {
 	// 	Password: "password123",
 	// })
 
+	// getUser(db)
+	users, err := getAllUsers(db)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println("All Users:", users)
+
 	// Start Server
 	port := config.AppConfig.Port
 	fmt.Printf("Server running on port %s...\n", port)
@@ -96,3 +105,49 @@ func main() {
 
 // 	return id, nil
 // }
+
+// func getUser(db *sql.DB) (User, error) {
+// 	var username, email, password string
+
+// 	query := `select username, email, password  from users where  id = $1`
+// 	err := db.QueryRow(query, 1).Scan(&username, &email, &password)
+
+// 	if err != nil {
+// 		return User{}, err
+// 	}
+
+// 	fmt.Println(username, email, password)
+
+// 	return User{
+// 		Username: username,
+// 		Email:    email,
+// 		Password: password,
+// 	}, nil
+
+// }
+
+func getAllUsers (db *sql.DB) ([]User, error) {
+	var users []User
+	query := `select username, email, password  from users`
+	rows, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var user User
+		err := rows.Scan(&user.Username, &user.Email, &user.Password)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+
+}
