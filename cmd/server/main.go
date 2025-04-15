@@ -2,6 +2,10 @@ package main
 
 import (
 	"chi-project/internal/config"
+	"chi-project/internal/db"
+
+	// "chi-project/internal/user/repository"
+	// "chi-project/internal/user/usecase"
 	"fmt"
 	"log"
 	"net/http"
@@ -16,15 +20,18 @@ import (
 
 func main() {
 
-	
-
-	
-
 
 	config.LoadEnvs()
+	db := db.InitPostgres()
+	defer db.Close()
 
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
+
+	// userRepo := repository.NewUserRepo(db)
+	// userUseCase := usecase.NewUserUsecase(userRepo)
+
+
 
 
 
