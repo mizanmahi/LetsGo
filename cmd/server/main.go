@@ -22,7 +22,6 @@ import (
 
 func main() {
 
-
 	config.LoadEnvs()
 	db := db.InitPostgres()
 	defer db.Close()
