@@ -4,6 +4,6 @@ package usecase
 import "chi-project/internal/user"
 
 type UserUsecase interface {
-	CreateUser(u *user.User) error
-	GetAllUsers() ([]user.User, error)
+	CreateUser(u *user.User) (int, error)
+	GetAllUsers() ([]*user.User, error)
 }

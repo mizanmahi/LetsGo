@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 
 	_ "github.com/lib/pq"
@@ -16,5 +17,7 @@ func InitPostgres() *sql.DB {
 	if err = db.Ping(); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println("Connected to database")
 	return db
 }

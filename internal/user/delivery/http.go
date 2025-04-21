@@ -4,6 +4,7 @@ import (
 	"chi-project/internal/user"
 	"chi-project/internal/user/usecase"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -23,10 +24,13 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	if err := h.UserUsecase.CreateUser(&u); err != nil {
+	if user_id ,err := h.UserUsecase.CreateUser(&u); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Fprintf(w, "User created with ID: %d", user_id)
 		return
 	}
+
+
 	w.WriteHeader(http.StatusCreated)
 }
 

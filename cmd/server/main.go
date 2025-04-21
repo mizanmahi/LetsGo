@@ -3,9 +3,11 @@ package main
 import (
 	"chi-project/internal/config"
 	"chi-project/internal/db"
+	"chi-project/internal/routes"
+	"chi-project/internal/user/delivery"
+	"chi-project/internal/user/repository"
+	"chi-project/internal/user/usecase"
 
-	// "chi-project/internal/user/repository"
-	// "chi-project/internal/user/usecase"
 	"fmt"
 	"log"
 	"net/http"
@@ -25,29 +27,30 @@ func main() {
 	db := db.InitPostgres()
 	defer db.Close()
 
-	router := chi.NewRouter()
-	router.Use(middleware.Logger)
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 
-	// userRepo := repository.NewUserRepo(db)
-	// userUseCase := usecase.NewUserUsecase(userRepo)
-
-
-
+	userRepo := repository.NewUserRepo(db)
+	userUseCase := usecase.NewUserUsecase(userRepo)
+	userHandler := delivery.NewUserHandler(userUseCase)
 
 
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
+	routes.RegisterUserRoutes(r, userHandler)
+
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("welcome"))
 	})
 
 	// health check
-	router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("OK"))
 	})
 
 	// Start Server
 	port := config.AppConfig.Port
 	fmt.Printf("Server running on port %s...\n", port)
-	log.Fatal(http.ListenAndServe(":"+port, router))
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
 
 
