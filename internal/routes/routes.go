@@ -11,5 +11,6 @@ func RegisterUserRoutes(r chi.Router, h *delivery.UserHandler) {
 	r.Route("/users", func(r chi.Router) {
 		r.Post("/", h.CreateUser)
 		r.Get("/", h.GetAllUsers)
+		r.Put("/{id}", h.UpdateUser)
 	})
 }

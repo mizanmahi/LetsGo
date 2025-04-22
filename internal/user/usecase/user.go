@@ -24,5 +24,9 @@ func (uc *userUseCase) GetAllUsers() ([]*user.User, error) {
 	return uc.repo.GetAllUsers()
 }
 
+func (uc *userUseCase) UpdateUser(u *user.User) error {
+	return uc.repo.UpdateUser(u)
+}
+
 
 // router => delivery => usecase (its interface will be used in delivery) => repository (its interface will be used in usecase)

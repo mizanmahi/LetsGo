@@ -59,3 +59,19 @@ func (r *userRepo) GetAllUsers() ([]*user.User, error) {
 	}
 	return users, nil
 }
+
+
+func (r *userRepo) UpdateUser(u *user.User) error {
+
+	query := `UPDATE users SET username = $1, email = $2, password = $3 WHERE id = $4`
+
+
+	_, err := r.DB.Exec(query,  u.Username, u.Email, u.Password, u.ID)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+
+}
